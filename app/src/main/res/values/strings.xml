@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">rfid_sas</string>
+    <string name="domain_name">https://attendence-system-akshay-chhajed.c9users.io</string>
+    <string name="start_html"><![CDATA[<html><script src="https://cdn.plot.ly/plotly-latest.min.js"></script>]]></string>
+    <string name="end_html"><![CDATA[</html>]]></string>
+    <string name="Login">/api/user/login/</string>
+    <string name="Logout">/api/user/logout/</string>
+</resources>
