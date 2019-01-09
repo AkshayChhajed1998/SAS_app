@@ -1,6 +1,13 @@
 package com.example.workstation.rfid_sas;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,51 +26,72 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public class MainActivity extends AppCompatActivity {
 
     String domain_name;
     SASCookieStore store;
     String csrf_token=new String();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        domain_name=getResources().getString(R.string.domain_name);
-
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        domain_name = getResources().getString(R.string.domain_name);
         store = new SASCookieStore(this);
-        AsyncRequest P=new AsyncRequest("GET",this);
-        P.setUrl(domain_name+this.getResources().getString(R.string.Login));
-        P.start();
-        try
-        {
-            P.join();
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-        if(P.getResponseBody().substring(1,5).equals("form"))
-        {
-            csrf_token = P.getResponseBody().substring(66, 66 + 64);
+        if(isConnected) {
+            AsyncRequest P = new AsyncRequest("GET", this);
+            P.setUrl(domain_name + this.getResources().getString(R.string.Login));
+            P.start();
             try {
-                store.add(new URI(domain_name), HttpCookie.parse(P.getResponseHeader().get("set-cookie").get(0)).get(0));
-            } catch (URISyntaxException e) {
+                P.join();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+            if(P.getResponseCode()/100 == 5 || P.getResponseCode()/100==4)
+            {
+                Toast.makeText(this,"Service Unavailable",Toast.LENGTH_LONG).show();
+                DialogFragment D = new dialogServiceUnavailable();
+                Bundle B = new Bundle();
+                B.putInt("Code",P.getResponseCode());
+                B.putString("msg",P.getResponseMsg());
+                D.setArguments(B);
+                D.show(getFragmentManager(), "ServiceUnavailable");
+            }
+            else
+            {
+                if (P.getResponseBody().substring(1, 5).equals("form"))
+                {
+                    csrf_token = P.getResponseBody().substring(66, 66 + 64);
+                    try {
+                        store.add(new URI(domain_name), HttpCookie.parse(P.getResponseHeader().get("set-cookie").get(0)).get(0));
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Intent dashBoard = new Intent(this, DashBoard.class);
+                    this.finish();
+                    dashBoard.putExtra("displayData", P.getResponseBody());
+                    dashBoard.putExtra("flag",false);
+                    Log.i("JSON:::", "onCreate: " + P.getResponseBody());
+                    // dashBoard.putExtra("displayData","<html><script src=\"https://cdn.plot.ly/plotly-latest.min.js\"></script>"+P.getResponseBody()+"</html>");
+                    store.loadAllCookies();
+                    Log.i("VC", "SignIN: " + store.getCookies());
+                    startActivity(dashBoard);
+                }
             }
         }
         else
         {
-            Intent dashBoard = new Intent(this,DashBoard.class);
-            this.finish();
-            dashBoard.putExtra("displayData",P.getResponseBody());
-            Log.i("JSON:::", "onCreate: "+P.getResponseBody());
-            // dashBoard.putExtra("displayData","<html><script src=\"https://cdn.plot.ly/plotly-latest.min.js\"></script>"+P.getResponseBody()+"</html>");
-            store.loadAllCookies();
-            Log.i("VC", "SignIN: "+store.getCookies());
-            startActivity(dashBoard);
+            Toast.makeText(this,"Internet Connectivity Not Found",Toast.LENGTH_LONG).show();
+            DialogFragment d = new dialogNetwork();
+            d.show(getFragmentManager(),"NETWORK");
         }
 
     }
@@ -97,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 Intent dashBoard = new Intent(this, DashBoard.class);
                 dashBoard.putExtra("displayData", P.getResponseBody());
+                dashBoard.putExtra("flag",false);
                 store.loadAllCookies();
                 this.finish();
                 startActivity(dashBoard);

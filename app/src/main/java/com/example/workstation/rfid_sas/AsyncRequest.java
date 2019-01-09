@@ -2,6 +2,7 @@ package com.example.workstation.rfid_sas;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
 import java.io.DataInputStream;
@@ -32,6 +33,7 @@ public class AsyncRequest extends Thread
     String Url = new String();
     String RequestBody = new String();
     final String RequestType;
+
 
     AsyncRequest(String requestType,Context context) {
         RequestType = requestType;store=new SASCookieStore(context);
@@ -148,6 +150,8 @@ public class AsyncRequest extends Thread
     {
         return ResponseBody;
     }
+
+    int getResponseCode(){return ResponseCode;}
 
     Map<String,List<String>> getResponseHeader()
     {

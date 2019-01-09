@@ -18,8 +18,10 @@ import org.json.JSONObject;
 public class DashBoard extends AppCompatActivity {
 
 
-    boolean flag=true;
+   // boolean flag=true;
     String domain_name;
+    static boolean flag = false;
+    static Bitmap B;
 
 
     @Override
@@ -30,7 +32,6 @@ public class DashBoard extends AppCompatActivity {
 
        // TextView DashBoardHeader = (TextView) findViewById(R.id.DashBoardHeader);
        // RelativeLayout DataLayout = (RelativeLayout) findViewById(R.id.DataLayout);
-        BitmapD B=new BitmapD();
 
         Intent DataIntent = getIntent();
 
@@ -50,23 +51,33 @@ public class DashBoard extends AppCompatActivity {
         TextView firstname = (TextView) findViewById(R.id.firstname);
         TextView lastname = (TextView) findViewById(R.id.lastname);
         TextView email = (TextView) findViewById(R.id.email);
-        ImageView I =(ImageView) findViewById(R.id.ProfilePic);
+
+        BitmapD B=new BitmapD();
+
+        B.setListner(new BitmapD.myListner() {
+            @Override
+            public void onCompletion(final Bitmap b) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((ImageView) findViewById(R.id.ProfilePic)).setImageBitmap(b);
+                    }
+                });
+
+            }
+        });
 
         try
         {
-            username.setText("username : "+((JSONObject)((JSONObject)obj.get(0)).get("fields")).get("username"));
-            lastname.setText(""+((JSONObject)((JSONObject)obj.get(0)).get("fields")).get("last_name"));
-            firstname.setText(""+((JSONObject)((JSONObject)obj.get(0)).get("fields")).get("first_name"));
-            email.setText("Email : "+((JSONObject)((JSONObject)obj.get(0)).get("fields")).get("email"));
-            B.setUrl(domain_name+"/media/"+((JSONObject)((JSONObject)obj.get(1)).get("fields")).get("image"));
-            B.start();
-            B.join();
-            Bitmap bm=B.getBitmap();
-            I.setImageBitmap(bm);
+
+                username.setText("username : " + ((JSONObject) ((JSONObject) obj.get(0)).get("fields")).get("username"));
+                lastname.setText("" + ((JSONObject) ((JSONObject) obj.get(0)).get("fields")).get("last_name"));
+                firstname.setText("" + ((JSONObject) ((JSONObject) obj.get(0)).get("fields")).get("first_name"));
+                email.setText("Email : " + ((JSONObject) ((JSONObject) obj.get(0)).get("fields")).get("email"));
+                B.setUrl(domain_name + "/media/" + ((JSONObject) ((JSONObject) obj.get(1)).get("fields")).get("image"));
+                B.start();
 
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

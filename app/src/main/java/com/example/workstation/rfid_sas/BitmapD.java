@@ -14,6 +14,22 @@ public class BitmapD extends Thread {
 
     Bitmap B;
     String Url;
+    public interface myListner
+    {
+        public void onCompletion(Bitmap B);
+    }
+
+    private myListner listner;
+
+    public BitmapD()
+    {
+        listner=null;
+    }
+
+    public void setListner(myListner listner)
+    {
+        this.listner=listner;
+    }
 
     public void setUrl(String Url)
     {
@@ -30,6 +46,8 @@ public class BitmapD extends Thread {
             connection.connect();
             InputStream input = connection.getInputStream();
             B= BitmapFactory.decodeStream(input);
+            if(listner!=null)
+                listner.onCompletion(B);
             Log.e("Bitmap","returned");
         } catch (IOException e) {
             e.printStackTrace();
