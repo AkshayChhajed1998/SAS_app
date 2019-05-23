@@ -24,6 +24,22 @@
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/actionbardb" />
+
+        <activity android:name=".analysisActivity" />
+        <activity android:name=".count">
+            <intent-filter>
+                <action android:name="count" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".sheet">
+            <intent-filter>
+                <action android:name="sheet" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

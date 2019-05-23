@@ -3,6 +3,7 @@ package com.example.workstation.rfid_sas;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +17,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,16 +48,20 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         domain_name = getResources().getString(R.string.domain_name);
+        String FCMToken = FirebaseInstanceId.getInstance().getToken();
         store = new SASCookieStore(this);
         if(isConnected) {
             AsyncRequest P = new AsyncRequest("GET", this);
             P.setUrl(domain_name + this.getResources().getString(R.string.Login));
             P.start();
+            ProgressDialog dialog = ProgressDialog.show(this, "",
+                    "Loading. Please wait...", true);
             try {
                 P.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            dialog.cancel();
             if(P.getResponseCode()/100 == 5 || P.getResponseCode()/100==4)
             {
                 Toast.makeText(this,"Service Unavailable",Toast.LENGTH_LONG).show();

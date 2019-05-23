@@ -1,5 +1,6 @@
 package com.example.workstation.rfid_sas;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +17,8 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.InputStream;
 
 public class DashBoard extends AppCompatActivity {
 
@@ -81,14 +86,7 @@ public class DashBoard extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        /*Intent DataIntent = getIntent();
-        DataIntent.getStringExtra("displayData");
-        WebView WV = (WebView) findViewById(R.id.GV);
-        WebView WV1 = (WebView) findViewById(R.id.GV1);
-        WV.getSettings().setJavaScriptEnabled(true);
-        WV1.getSettings().setJavaScriptEnabled(true);
-        WV.loadData(DataIntent.getStringExtra("displayData"),"text/html",null);
-        WV1.loadData(DataIntent.getStringExtra("displayData"),"text/html",null);*/
+
     }
 
     @Override
@@ -110,4 +108,16 @@ public class DashBoard extends AppCompatActivity {
         this.finish();
     }
 
+    public void analysis(View B)
+    {
+        Intent I = new Intent(getApplicationContext(),analysisActivity.class);
+        I.putExtras(getIntent().getExtras());
+        startActivity(I);
+    }
+
+    public void sheets(View B)
+    {
+       // Intent I = new Intent(getParent(),sheetsActivity.class);
+       // I.putExtras(getIntent());
+    }
 }

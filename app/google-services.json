@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "228434246898",
+    "firebase_url": "https://rfidsas-15e1f.firebaseio.com",
+    "project_id": "rfidsas-15e1f",
+    "storage_bucket": "rfidsas-15e1f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228434246898:android:b78aac79316c2bb6",
+        "android_client_info": {
+          "package_name": "com.example.workstation.rfid_sas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "228434246898-phplk7prk7ddqn8rupo32p34ni24ptg1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.workstation.rfid_sas",
+            "certificate_hash": "c47a758d988ea3d9b1075e976f47ae79c7ae4e58"
+          }
+        },
+        {
+          "client_id": "228434246898-akufleaae5b8ps2jr35plmqsnm7d54gs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6-2e2pvApEdqIH71OTX5uGI3YqomO24M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "228434246898-akufleaae5b8ps2jr35plmqsnm7d54gs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

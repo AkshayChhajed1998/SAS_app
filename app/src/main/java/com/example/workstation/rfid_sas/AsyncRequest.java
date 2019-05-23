@@ -5,9 +5,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -20,7 +26,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class AsyncRequest extends Thread
 {
     final String TAG = AsyncRequest.class.getSimpleName();
-
+    final String Token = FirebaseInstanceId.getInstance().getToken();
     final String domain_name;
     SASCookieStore store;
 
@@ -56,6 +62,7 @@ public class AsyncRequest extends Thread
             for(HttpCookie H:store.get(new URI(domain_name)))
                 S+=H+"; ";
             httpconn.setRequestProperty("Cookie",S);
+            httpconn.setRequestProperty("HCMToken",Token);
 
             if(RequestType=="POST")
             {
@@ -113,11 +120,18 @@ public class AsyncRequest extends Thread
             this.ResponseMsg = httpconn.getResponseMessage();
             this.ResponseCode = httpconn.getResponseCode();
             this.ResponseHeader = httpconn.getHeaderFields();
-            byte[] b = new byte[1024 * 1024];
-            int len;
-            len = (new DataInputStream(httpconn.getInputStream())).read(b);
-            Log.i(TAG, "run: "+b.toString());
+            char[] b = new char[1048576];
+            char[] buff = new char[100];
+            int len=0,r=0;
+            BufferedReader BR = new BufferedReader(new InputStreamReader(httpconn.getInputStream()));
+            //len=httpconn.getInputStream().read(b);
+
+            while((r = BR.read(b,len,100))!=-1)len+=r;
+            //len = (new DataInputStream(httpconn.getInputStream())).read(b);
+            System.out.println(len);
+            //Log.i(TAG, "run: "+new String(b,0,len));
             this.ResponseBody = new String(b, 0, len);
+            System.out.println("LENGTH:_____"+this.ResponseBody.length());
             httpconn.disconnect();
         }
         catch(IOException e)

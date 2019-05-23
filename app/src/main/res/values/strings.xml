@@ -5,4 +5,9 @@
     <string name="end_html"><![CDATA[</html>]]></string>
     <string name="Login">/api/user/login/</string>
     <string name="Logout">/api/user/logout/</string>
+    <string name="student_analysis">/api/student/dashboard/analysis</string>
+    <string name="teacher_analysis">/api/teacher/dashboard/analysis</string>
+    <string name="student_profile">/api/student/dashboard/profile</string>
+    <string name="teacher_profile">/api/teacher/dashboard/profile</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
